@@ -17,5 +17,5 @@
 - To get support --> [Discord](http://discord.vorpcore.com/)
 - Made between alphatule and [PokeSerGG](https://github.com/PokeSerGG)
 
-## 4. Fix
+## 4. Fixes
 - Fix temp color
