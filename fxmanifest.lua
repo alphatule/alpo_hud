@@ -14,3 +14,5 @@ shared_scripts {
 	'locales/es.lua',
 	'locales/en.lua',
 }
+
+dependency 'vorp_core' 
