@@ -1,5 +1,6 @@
 local minutes
 local hours
+local showHud = true
 
 local directions = { [0] = 'N', [45] = 'NW', [90] = 'W', [135] = 'SW', [180] = 'S', [225] = 'SE', [270] = 'E', [315] = 'NE', [360] = 'N'} 
 
@@ -36,7 +37,9 @@ Citizen.CreateThread(function()
         if minutes <= 9 then
             minutes = "0"..minutes
         end
-        DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+        if showHud then
+            DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+        end
         --print(math.floor(temperature*10) /10)
     end
 end)
@@ -131,3 +134,11 @@ end
 function CreateVarString(p0, p1, variadic)
     return Citizen.InvokeNative(0xFA925AC00EB830B9, p0, p1, variadic, Citizen.ResultAsLong())
 end
+
+RegisterCommand('hud', function(source, args, rawCommand)
+    if showHud then
+        showHud = false
+    else
+        showHud = true
+    end
+end)
