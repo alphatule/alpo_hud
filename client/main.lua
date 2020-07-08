@@ -1,5 +1,6 @@
 local minutes
 local hours
+local showHud = true
 
 local directions = { [0] = 'N', [45] = 'NW', [90] = 'W', [135] = 'SW', [180] = 'S', [225] = 'SE', [270] = 'E', [315] = 'NE', [360] = 'N'} 
 
@@ -8,19 +9,36 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         local coords = GetEntityCoords(PlayerPedId(), true)
         local temperature = math.floor(GetTemperatureAtCoords(coords.x, coords.y, coords.z)*10)/10
+        if Config.Fahrenheit then
+        temperature = (temperature*9/5)+32
+        if temperature < 14 then
+            temperature = '~COLOR_PLATFORM_BLUE~'..temperature
+        elseif temperature < 23 and temperature >= 14 then
+            temperature = '~COLOR_BLUE~'..temperature
+        elseif temperature < 50 and temperature >= 23 then
+            temperature = '~COLOR_BLUELIGHT~'..temperature
+        elseif temperature < 59 and temperature >= 50 then
+            temperature = '~COLOR_YELLOWSTRONG~'..temperature
+        elseif temperature < 68 and temperature >= 59 then
+            temperature = '~COLOR_ORANGE~'..temperature
+        elseif temperature >= 68 then
+            temperature = '~COLOR_NET_PLAYER2~'..temperature
+        end
+    else
         if temperature < -10 then
             temperature = '~COLOR_PLATFORM_BLUE~'..temperature
-        elseif temperature < -5 then
+        elseif temperature < -5 and temperature >= -10 then
             temperature = '~COLOR_BLUE~'..temperature
-        elseif temperature < 5 then
+        elseif temperature < 10 and temperature >= -5 then
             temperature = '~COLOR_BLUELIGHT~'..temperature
+        elseif temperature < 15 and temperature >= 10 then
+            temperature = '~COLOR_YELLOWSTRONG~'..temperature
+        elseif temperature < 20 and temperature >= 15 then
+            temperature = '~COLOR_ORANGE~'..temperature
         elseif temperature >= 20 then
             temperature = '~COLOR_NET_PLAYER2~'..temperature
-        elseif temperature >= 15 then
-            temperature = '~COLOR_ORANGE~'..temperature
-        elseif temperature >= 10 then
-            temperature = '~COLOR_YELLOWSTRONG~'..temperature
         end
+    end
         for k,v in pairs(directions)do
 			direction = GetEntityHeading(PlayerPedId())
 			if(math.abs(direction - k) < 22.5)then
@@ -36,7 +54,13 @@ Citizen.CreateThread(function()
         if minutes <= 9 then
             minutes = "0"..minutes
         end
-        DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+        if showHud then
+        if Config.Fahrenheit then
+            DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+        else
+            DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+        end
+    end
         --print(math.floor(temperature*10) /10)
     end
 end)
@@ -131,3 +155,11 @@ end
 function CreateVarString(p0, p1, variadic)
     return Citizen.InvokeNative(0xFA925AC00EB830B9, p0, p1, variadic, Citizen.ResultAsLong())
 end
+
+RegisterCommand('hud', function(source, args, rawCommand)
+    if showHud then
+        showHud = false
+    else
+        showHud = true
+    end
+end)
