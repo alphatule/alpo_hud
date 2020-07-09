@@ -11,3 +11,6 @@ client_script {
 	'client/main.lua',
 	'config.lua',
 }
+
+
+dependency 'vorp_core'
