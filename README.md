@@ -18,7 +18,7 @@
 ## 3. Info
 - KLS
 - To get support --> [Discord](http://discord.vorpcore.com/)
-- Made between alphatule and [PokeSerGG](https://github.com/PokeSerGG)
+- Made between alphatule, [PokeSerGG](https://github.com/PokeSerGG) and [Xmau](https://github.com/Xmaught)
 
 ## 4. Fixes
 - Fix temp color
