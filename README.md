@@ -5,15 +5,18 @@
 
 ## 1. Requirements
 
-- RedM server
+- [VORP-Core](https://github.com/VORPCORE/VORP-Core)
+- [VORP-Metabolism](https://github.com/VORPCORE/VORP-Metabolism)
 
 ## 2. Installation
 
 - Add ```ensure alpo_hud``` in your server.cfg
 - You can change language on ```config.lua``` -> ```Config.Locale``` en=English, es=Español
+- You can change reduction values of stamina & Thirst in Config.lua file (Modify only under your responsability)
 - You can choose Celsius or Fahrenheit on ```config.lua Config.Fahrenheit``` false= Celsius --- true= Fahrenheit
 
 ## 3. Info
+- KLS
 - To get support --> [Discord](http://discord.vorpcore.com/)
 - Made between alphatule and [PokeSerGG](https://github.com/PokeSerGG)
 
