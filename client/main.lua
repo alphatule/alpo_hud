@@ -38,15 +38,15 @@ Citizen.CreateThread(function()
                 else
                     temperature = temp + 1
                 end
-			end
+			      end
         end
         
         for k,v in pairs(directions)do
-			direction = GetEntityHeading(PlayerPedId())
-			if(math.abs(direction - k) < 22.5)then
-				direction = v
-				break
-			end
+			      direction = GetEntityHeading(PlayerPedId())
+			      if(math.abs(direction - k) < 22.5)then
+				        direction = v
+				        break
+			      end
         end
 
         hours = GetClockHours()
@@ -129,7 +129,7 @@ Citizen.CreateThread(function()
                 TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.LargeWaterReduction)
             end
         end
-	end
+	  end
 end)
 
 function GetCurentTownName()
