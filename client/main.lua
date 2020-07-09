@@ -1,34 +1,54 @@
 local minutes
 local hours
 local showHud = true
+local temp
+local temperature
 
-local directions = { [0] = 'N', [45] = 'NW', [90] = 'W', [135] = 'SW', [180] = 'S', [225] = 'SE', [270] = 'E', [315] = 'NE', [360] = 'N'} 
+local ClothesCats = {
+	0x9925C067, --hat
+	0x2026C46D, --shirt
+	0x1D4C528A, -- pants
+	0x777EC6EF, -- boots 
+	0xE06D30CE, -- coat
+	0x662AC34, --open coat
+	0xEABE0032, --gloves 
+	0x485EE834, --vest
+	0xAF14310B, -- poncho
+}
+
+local directions = { [0] = 'N', [45] = 'NW', [90] = 'W', [135] = 'SW', [180] = 'S', [225] = 'SE', [270] = 'E', [315] = 'NE', [360] = 'N'}
 
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
+        Wait(0)
         local coords = GetEntityCoords(PlayerPedId(), true)
-        local temperature = math.floor(GetTemperatureAtCoords(coords.x, coords.y, coords.z)*10)/10
-        if temperature < -10 then
-            temperature = '~COLOR_PLATFORM_BLUE~'..temperature
-        elseif temperature < -5 then
-            temperature = '~COLOR_BLUE~'..temperature
-        elseif temperature < 5 then
-            temperature = '~COLOR_BLUELIGHT~'..temperature
-        elseif temperature >= 20 then
-            temperature = '~COLOR_NET_PLAYER2~'..temperature
-        elseif temperature >= 15 then
-            temperature = '~COLOR_ORANGE~'..temperature
-        elseif temperature >= 10 then
-            temperature = '~COLOR_YELLOWSTRONG~'..temperature
+        temp = math.floor(GetTemperatureAtCoords(coords.x, coords.y, coords.z)*10)/10
+
+
+        if Config.Fahrenheit then
+            temp = (temp*9/5)+32
         end
+
+        for k,v in pairs(ClothesCats) do
+			local IsWearingClothes = Citizen.InvokeNative(0xFB4891BD7578CDC1, PlayerPedId(), v)
+            if IsWearingClothes then
+                if Config.Fahrenheit then
+                    temperature = temp + 1.8
+                    temperature = math.floor(temperature*10)/10
+                else
+                    temperature = temp + 1
+                end
+			end
+        end
+        
         for k,v in pairs(directions)do
 			direction = GetEntityHeading(PlayerPedId())
 			if(math.abs(direction - k) < 22.5)then
 				direction = v
 				break
 			end
-		end
+        end
+
         hours = GetClockHours()
         minutes = GetClockMinutes()
         if hours <= 9 then
@@ -38,10 +58,78 @@ Citizen.CreateThread(function()
             minutes = "0"..minutes
         end
         if showHud then
-            DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+            if Config.Fahrenheit then
+                if temp < Config.ExtremeColdF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_PLATFORM_BLUE~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.ColdF and temp >= Config.ExtremeColdF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_BLUE~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.CoolF and temp >= Config.ColdF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_BLUELIGHT~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.WarmF and temp >= Config.CoolF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.HotF and temp >= Config.WarmF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_YELLOWSTRONG~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.ExtremeHotF and temp >= Config.HotF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_ORANGE~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp >= Config.ExtremeHotF then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_NET_PLAYER2~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                end
+            else
+                if temp < Config.ExtremeColdC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_PLATFORM_BLUE~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.ColdC and temp >= Config.ExtremeColdC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_BLUE~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.CoolC and temp >= Config.ColdC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_BLUELIGHT~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.WarmC and temp >= Config.CoolC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.HotC and temp >= Config.WarmC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_YELLOWSTRONG~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp < Config.ExtremeHotC and temp >= Config.HotC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_ORANGE~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                elseif temp >= Config.ExtremeHotC then
+                    DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_NET_PLAYER2~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
+                end
+            end
         end
-        --print(math.floor(temperature*10) /10)
     end
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Wait(15000)
+		local ped = PlayerPedId()
+        local stamina = GetAttributeCoreValue(ped, 1)
+        if Config.Fahrenheit then
+            if tonumber(temp) < Config.ExtremeColdF then
+                Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, stamina - Config.LargeStaminaReduction)
+            elseif tonumber(temp) < Config.ColdF and tonumber(temp) >= Config.ExtremeColdF then
+                Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, stamina - Config.MediumStaminaReduction)
+            elseif tonumber(temp) < Config.CoolF and tonumber(temp) >= Config.ColdF then
+                Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, stamina - Config.LittleStaminaReduction)
+            elseif tonumber(temp) < Config.HotF and tonumber(temp) >= Config.WarmF then
+                TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.LittleWaterReduction)
+            elseif tonumber(temp) < Config.ExtremeHotF and tonumber(temp) >= Config.HotF then
+                TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.MediumWaterReduction)
+            elseif tonumber(temp) >= Config.ExtremeHotF then
+                TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.LargeWaterReduction)
+            end
+        else
+            if tonumber(temp) < Config.ExtremeColdC then
+                Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, stamina - Config.LargeStaminaReduction)
+            elseif tonumber(temp) < Config.ColdC and tonumber(temp) >= Config.ExtremeColdC then
+                Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, stamina - Config.MediumStaminaReduction)
+            elseif tonumber(temp) < Config.CoolC and tonumber(temp) >= Config.ColdC then
+                Citizen.InvokeNative(0xC6258F41D86676E0, ped, 1, stamina - Config.LittleStaminaReduction)
+            elseif tonumber(temp) < Config.HotC and tonumber(temp) >= Config.WarmC then
+                TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.LittleWaterReduction)
+            elseif tonumber(temp) < Config.ExtremeHotC and tonumber(temp) >= Config.HotC then
+                TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.MediumWaterReduction)
+            elseif tonumber(temp) >= Config.ExtremeHotC then
+                TriggerEvent("vorpmetabolism:changeValue", "Thirst", Config.LargeWaterReduction)
+            end
+        end
+	end
 end)
 
 function GetCurentTownName()
