@@ -7,6 +7,7 @@
 
 - [VORP-Core](https://github.com/VORPCORE/VORP-Core)
 - [VORP-Metabolism](https://github.com/VORPCORE/VORP-Metabolism)
+- [VORP-ClothingStore](https://github.com/VORPCORE/VORP-ClothingStore)
 
 ## 2. Installation
 
