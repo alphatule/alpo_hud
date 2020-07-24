@@ -11,4 +11,5 @@ Locales['es'] = {
     ['viernes'] = 'Viernes',
     ['sabado'] = 'Sábado',
     ['domingo'] = 'Domingo',
+    ['job'] = 'desempleado',
 }

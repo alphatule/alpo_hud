@@ -1,8 +1,9 @@
 local minutes
 local hours
 local showHud = true
-local temp
-local temperature
+local temp = '0'
+local temperature = '0'
+local userjob = 'unemployed'
 
 local ClothesCats = {
 	0x9925C067, --hat
@@ -17,6 +18,15 @@ local ClothesCats = {
 }
 
 local directions = { [0] = 'N', [45] = 'NW', [90] = 'W', [135] = 'SW', [180] = 'S', [225] = 'SE', [270] = 'E', [315] = 'NE', [360] = 'N'}
+
+Citizen.CreateThread(function()
+    while true do
+        Wait(60000)
+        TriggerEvent("vorp:ExecuteServerCallBack", "getjobUser", function(job)
+            userjob = job
+        end, 'i')
+    end
+end)
 
 Citizen.CreateThread(function()
     while true do
@@ -90,6 +100,7 @@ Citizen.CreateThread(function()
                 elseif temp >= Config.ExtremeHotC then
                     DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_NET_PLAYER2~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
                 end
+                DrawTxt(userjob, 0.0035, 0.968, 0.3, 0.3, true, 255, 255, 255, 255, false)
             end
         end
     end
