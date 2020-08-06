@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Locale = "es"
+Config.Locale = "en"
 
 Config.Fahrenheit = false
 
