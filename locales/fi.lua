@@ -1,0 +1,15 @@
+Locales['fi'] = {
+    ['zona'] = 'Vyöhyke: %s',
+    ['dia'] = 'Päivä: %s',
+    ['temp'] = 'Lämpötila: %s',
+    ['hora'] = 'Tunti: %s',
+    ['fuera_ciudad'] = '~COLOR_REDLIGHT~Out of town',
+    ['lunes'] = 'Maanantai',
+    ['martes'] = 'Tiistai',
+    ['miercoles'] = 'Keskiviikko',
+    ['jueves'] = 'Torstai',
+    ['viernes'] = 'Perjantai',
+    ['sabado'] = 'Lauantai',
+    ['domingo'] = 'Sunnuntai',
+    ['job'] = 'Työtön',
+}
