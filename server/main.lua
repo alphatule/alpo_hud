@@ -11,6 +11,6 @@ VorpCore.addRpcCallback("getjobUser", function(source, cb, item)
     if job ~= 'unemployed' then
         cb(job)
     else
-        cb(_U('job'))
+        cb('unemployed')
     end
 end)

@@ -3,7 +3,7 @@ local hours
 local showHud = true
 local temp = '0'
 local temperature = '0'
-local userjob = _U('job')
+local userjob = 'unemployed'
 
 local ClothesCats = {
 	0x9925C067, --hat
