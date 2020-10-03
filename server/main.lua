@@ -1,13 +1,16 @@
-VORP = exports.vorp_core:vorpAPI()
+local VorpCore = {}
 
-VORP.addNewCallBack("getjobUser", function(source, cb, item)
+TriggerEvent("getCore",function(core)
+    VorpCore = core
+end)
+
+VorpCore.addRpcCallback("getjobUser", function(source, cb, item)
     local _source = source
-    TriggerEvent("vorp:getCharacter", _source, function(user)
-        local job = user.job
-        if job ~= nil then
-            cb(job)
-        else
-            cb('unemployed')
-        end
-    end)
+    local Character = VorpCore.getUser(_source).getUsedCharacter
+    local job = Character.job
+    if job ~= 'unemployed' then
+        cb(job)
+    else
+        cb(_U('job'))
+    end
 end)

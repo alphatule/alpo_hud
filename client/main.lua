@@ -3,7 +3,7 @@ local hours
 local showHud = true
 local temp = '0'
 local temperature = '0'
-local userjob = 'unemployed'
+local userjob = _U('job')
 
 local ClothesCats = {
 	0x9925C067, --hat
@@ -19,13 +19,16 @@ local ClothesCats = {
 
 local directions = { [0] = 'N', [45] = 'NW', [90] = 'W', [135] = 'SW', [180] = 'S', [225] = 'SE', [270] = 'E', [315] = 'NE', [360] = 'N'}
 
-Citizen.CreateThread(function()
-    while true do
-        Wait(60000)
-        TriggerEvent("vorp:ExecuteServerCallBack", "getjobUser", function(job)
-            userjob = job
-        end, 'i')
-    end
+RegisterNetEvent("vorp:SelectedCharacter")
+AddEventHandler("vorp:SelectedCharacter", function(charid)
+    Citizen.CreateThread(function()
+        while true do
+            Wait(60000)
+            TriggerEvent("vorp:ExecuteServerCallBack", "getjobUser", function(job)
+                userjob = job
+            end, 'i')
+        end
+    end)
 end)
 
 Citizen.CreateThread(function()
