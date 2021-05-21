@@ -87,6 +87,7 @@ Citizen.CreateThread(function()
                 elseif temp >= Config.ExtremeHotF then
                     DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_NET_PLAYER2~'..temperature)..'°F~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
                 end
+		DrawTxt(userjob, 0.0035, 0.968, 0.3, 0.3, true, 255, 255, 255, 255, false)
             else
                 if temp < Config.ExtremeColdC then
                     DrawTxt(_U('zona', GetCurentTownName())..'~q~ - '..direction..' - '.._U('dia', dayOfWeek())..'\n'.._U('temp', '~COLOR_PLATFORM_BLUE~'..temperature)..'°C~q~'..' - '.._U('hora', hours..':'..minutes), 0.12, 0.959, 0.3, 0.3, true, 255, 255, 255, 255, false)
