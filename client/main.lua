@@ -239,9 +239,10 @@ function CreateVarString(p0, p1, variadic)
 end
 
 RegisterCommand('hud', function(source, args, rawCommand)
-    if showHud then
-        showHud = false
-    else
-        showHud = true
-    end
+--    if showHud then
+--        showHud = false
+--    else
+--        showHud = true
+--    end
+    showHud = not showHud
 end)
